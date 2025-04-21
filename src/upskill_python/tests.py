@@ -1,8 +1,7 @@
 import pytest
-import simple_banking_system as sbs
 import bank_class
 import client_class
-import transaction_class
+
 
 @pytest.fixture
 def bank():
@@ -10,13 +9,16 @@ def bank():
     bank_inst.add_client("John Doe", 100)
     return bank_inst
 
+
 @pytest.fixture
 def client():
     return client_class.Client(0, "John Doe", 100)
 
+
 @pytest.fixture
 def another_client():
     return client_class.Client(1, "John Cena", 5000000)
+
 
 ##############################################################################
 class TestBankClass:
@@ -26,7 +28,7 @@ class TestBankClass:
     def test_adding_new_client_bank_class(self, bank, another_client):
         bank.add_client(another_client.name, another_client.balance)
         assert another_client in bank.client_list
-    
+
     def test_get_client_bank_class(self, bank, client):
         get_client = bank.get_client("John Doe")
         assert get_client == client
@@ -42,6 +44,7 @@ class TestBankClass:
 
     def test_get_client_transactions_bank_class(self):
         pass
+
 
 ##############################################################################
 class TestClientClass:
@@ -62,6 +65,7 @@ class TestClientClass:
 
     def test_print_statemenet_client_class(self):
         pass
+
 
 ##############################################################################
 class TestTrancationClass:
