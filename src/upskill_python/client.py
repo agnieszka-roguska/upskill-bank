@@ -1,61 +1,60 @@
+from uuid import uuid4
 from datetime import datetime
-import transaction_class
-
+import upskill_python.transaction as transaction
 
 class Client:
-    def __init__(self, ID, name, balance):
-        self.ID = ID
+    def __init__(self, name: str, balance: int | float):
+        self.__id = uuid4().hex
         self.name = name
-        self.balance = balance
-        self.transaction_list = []
+        self.__balance = balance
+        self.transaction_list: list[transaction.Transaction] = []
 
-    def __str__(self):
-        print("Client info:")
-        print(
-            "\t Name: ",
-            self.name,
-            "\t Client ID: ",
-            self.__ID,
-            "\t Balance: ",
-            self.balance,
-        )
+    def __str__(self) -> None:
+        message = f"Name: {self.name}\t Client ID: {self.id} Balance: {self.balance}"
+        return message
+    
+    def __repr__(self) -> str:
+        return f"Client({self.name}, {self.balance})"
 
-    def __repr__(self):
-        return f"Client({self.ID}, {self.name}, {self.balance})"
+    def __eq__(self, another_client: 'Client') -> bool:
+        return self.balance == another_client.balance and self.name == another_client.name
+    
+    @property
+    def id(self) -> str:
+        return self.__id
+    
+    @property
+    def balance(self) -> float:
+        return self.__balance
 
-    def __eq__(self, another_client):
-        return (
-            self.ID == another_client.ID and self.name == another_client.name and self.balance == another_client.balance
-        )
+    @balance.setter
+    def balance(self, value: int | float) -> None:
+        self.__balance = value
 
-    def depose(self, amount):
-        self.balance += amount
-        transaction = transaction_class.Transaction(self.name, "deposit", amount, datetime.now(), self.get_balance())
-        self.transaction_list.append(transaction)
+    def depose(self, amount: int | float) -> None | dict:
+        transaction_name = transaction.TransactionType.DEPOSIT.value
+        self.balance = self.balance + amount
+        new_transaction = transaction.Transaction(self.name, transaction_name, amount, datetime.now(), self.balance)
+        self.transaction_list.append(new_transaction)
 
-    def withdraw(self, amount):
-        transaction_name = "withdraw"
+    def withdraw(self, amount: int | float) -> None | dict:
+        transaction_name = transaction.TransactionType.WITHDRAW.value #"withdraw"
         if (self.balance >= amount) & (amount >= 0):
-            self.balance -= amount
-            transaction = transaction_class.Transaction(
-                self.name, transaction_name, amount, datetime.now(), self.get_balance()
-            )
-            self.transaction_list.append(transaction)
+            self.balance = self.balance - amount
+            new_transaction = transaction.Transaction(self.name, transaction_name, amount, datetime.now(), self.balance)
+            self.transaction_list.append(new_transaction)
         elif amount < 0:
-            raise ValueError("The amount can't be negative")
+            return {"status": "ERROR", "content": "The amount can't be negative"}
+            # raise ValueError("The amount can't be negative")
         else:
-            raise ValueError(
-                f"Transaction declined due to insufficient funds. Your account balance is {self.balance}. Failed transation info: {transaction_name}, {amount}"
-            )
-
-    def get_balance(self):
-        return self.balance
-
-    def get_transaction_history(self):
+            return {"status": "ERROR", "content": f"Transaction declined due to insufficient funds. Your account balance is {self.balance}. Failed transation info: {transaction_name}, {amount}"}
+           #raise ValueError(f"Transaction declined due to insufficient funds. Your account balance is {self.balance}. Failed transation info: {transaction_name}, {amount}")
+    
+    def get_transaction_history(self) -> str:
         if len(self.transaction_list) == 0:
             return "No history"
-        else:
+        else: 
             message = f"Here is the transaction history for {self.name}:\n"
-            for transaction in self.transaction_list:
-                message += f"Date: {transaction.transaction_date}\t Type: {transaction.transaction_type}\t Amount: {transaction.transaction_amount}\t Account balance after the transaction: {transaction.balance_after_operation}\n"
+            for some_transaction in self.transaction_list:
+                message += str(some_transaction) + "\n"
             return message
