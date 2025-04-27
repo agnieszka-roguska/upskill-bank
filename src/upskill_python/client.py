@@ -31,24 +31,27 @@ class Client:
     def balance(self, value: int | float) -> None:
         self.__balance = value
 
-    def depose(self, amount: int | float) -> None | dict:
+    def depose(self, amount: int | float) -> None:
         transaction_name = transaction.TransactionType.DEPOSIT.value
-        self.balance = self.balance + amount
+        if amount >= 0:
+            self.balance = self.balance + amount
+        else:
+            raise ValueError("The amount can't be negative")
         new_transaction = transaction.Transaction(self.name, transaction_name, amount, datetime.now(), self.balance)
         self.transaction_list.append(new_transaction)
 
-    def withdraw(self, amount: int | float) -> None | dict:
+    def withdraw(self, amount: int | float) -> None:
         transaction_name = transaction.TransactionType.WITHDRAW.value #"withdraw"
         if (self.balance >= amount) & (amount >= 0):
             self.balance = self.balance - amount
             new_transaction = transaction.Transaction(self.name, transaction_name, amount, datetime.now(), self.balance)
             self.transaction_list.append(new_transaction)
         elif amount < 0:
-            return {"status": "ERROR", "content": "The amount can't be negative"}
-            # raise ValueError("The amount can't be negative")
+            #return {"status": "ERROR", "content": "The amount can't be negative"}
+            raise ValueError("The amount can't be negative")
         else:
-            return {"status": "ERROR", "content": f"Transaction declined due to insufficient funds. Your account balance is {self.balance}. Failed transation info: {transaction_name}, {amount}"}
-           #raise ValueError(f"Transaction declined due to insufficient funds. Your account balance is {self.balance}. Failed transation info: {transaction_name}, {amount}")
+            #return {"status": "ERROR", "content": f"Transaction declined due to insufficient funds. Your account balance is {self.balance}. Failed transation info: {transaction_name}, {amount}"}
+            raise ValueError(f"Transaction declined due to insufficient funds. Your account balance is {self.balance}. Failed transation info: {transaction_name}, {amount}")
     
     def get_transaction_history(self) -> str:
         if len(self.transaction_list) == 0:

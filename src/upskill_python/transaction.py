@@ -7,11 +7,11 @@ class TransactionType(Enum):
 
 
 class Transaction:
-    def __init__(self, client_name: str, transaction_type: str, transaction_amount: float, transaction_date, balance_after_operation: float):
+    def __init__(self, client_name: str, transaction_type: str, transaction_amount: float, transaction_date, balance_after_operation: float) -> None:
         if transaction_type.lower() not in [item.value for item in TransactionType]:
-            return {"status": "ERROR", "content": "Invalid transaction type"}
+            raise ValueError("Invalid transaction type")
         elif transaction_amount < 0:
-            raise {"status": "ERROR", "content": "Transaction amount can't be a negative number."}
+            raise ValueError("Transaction amount can't be a negative number.")
         
         if transaction_type.lower() == TransactionType.WITHDRAW.value:
             self.transaction_amount = -transaction_amount

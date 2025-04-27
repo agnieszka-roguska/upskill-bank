@@ -29,11 +29,3 @@ class Bank:
         for some_client in self.client_list:
             message += f"{some_client.name} \t {some_client.balance} \n"
         return message
-
-    # # TODO: Check if used
-    # def get_client_transactions(self, client_name):  
-    #     """# takes client instance and returns transaction history"""
-    #     for some_client in self.client_list:
-    #         if some_client.name == client_name:
-    #             return some_client.get_transaction_history()
-    #     raise ValueError("No such client in the database")
