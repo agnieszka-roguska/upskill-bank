@@ -1,2 +1,2 @@
 def main() -> None:
-    print("Hello from upskill-python2!")
+    print("Hello from upskill-python!")

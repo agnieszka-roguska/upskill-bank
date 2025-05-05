@@ -10,14 +10,15 @@ class Bank:
         new_client = client.Client(new_client_name, initial_balance)
         self.client_list.append(new_client)
 
-    def remove_client(self, name_client_to_remove: str) -> None:  
-        """Remove client from the client_list and remove client instance."""
-        for index, some_client in enumerate(self.client_list):
-            if some_client.name == name_client_to_remove:
-                self.client_list.pop(index)
+    def remove_client(self, name_client_to_remove: str) -> None:
+        if not any(some_client.name == name_client_to_remove for some_client in self.client_list):
+            raise ValueError("There is no such client in the database")
+        else:
+            for index, some_client in enumerate(self.client_list):
+                if some_client.name == name_client_to_remove:
+                    self.client_list.pop(index)
 
     def get_client(self, client_name: str) -> client.Client:  # takes client_name as an argument and returns client instance
-        #TODO: if any([some_client.name == client_name for some_client in self.client_list])
         for some_client in self.client_list:
             if some_client.name == client_name:
                 return some_client

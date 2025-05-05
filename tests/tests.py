@@ -30,6 +30,7 @@ class TestBankClass:
 
     def test_adding_new_client_bank_class(self, my_bank, another_client):
         my_bank.add_client(another_client.name, another_client.balance)
+        assert len(my_bank.client_list) == 2
         assert another_client in my_bank.client_list
         assert my_bank.client_list[1].name == another_client.name
         assert my_bank.client_list[1].id != ""
@@ -38,10 +39,21 @@ class TestBankClass:
         get_client = my_bank.get_client("John Doe")
         assert get_client == random_client
 
+    def test_get_client_not_in_the_database_error_bank_class(self, my_bank, random_client):
+        incorrect_name = "Johnanna Doe"
+        with pytest.raises(ValueError) as excinfo:
+            get_client = my_bank.get_client(incorrect_name)
+        assert str(excinfo.value) == f"There is no client called {incorrect_name} in the database."
+
     def test_remove_client_bank_class(self, my_bank, random_client):
         my_bank.remove_client(random_client.name)
         assert my_bank.client_list == []
 
+    def test_remove_client_invalid_client_name_bank_class(self, my_bank):
+        with pytest.raises(ValueError) as excinfo:
+            my_bank.remove_client("Johanna Doe")
+        assert str(excinfo.value) == "There is no such client in the database"
+        
     def test_get_all_client_balances_bank_class(self, my_bank, random_client):
         info = f"{random_client.name} \t {random_client.balance} \n"
         result = my_bank.get_all_client_balances()
