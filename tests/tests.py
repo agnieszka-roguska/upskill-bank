@@ -148,7 +148,6 @@ class TestTrancationClass:
                 "name" : "John Doe",
                 "transaction_type" : "wITHdRaW",
                 "transaction_amount" : 16,
-                "transaction_date" : datetime.now(),
                 "balance_after_operation" : 32
                 },
                 None),
@@ -156,7 +155,6 @@ class TestTrancationClass:
                 "name" : "John Doe",
                 "transaction_type" : "wITHdRaW",
                 "transaction_amount" : 0,
-                "transaction_date" : "2025-04-27 18:51:32.148363",
                 "balance_after_operation" : 0
                 },
                 None),
@@ -164,7 +162,6 @@ class TestTrancationClass:
                 "name" : "John Doe",
                 "transaction_type" : "withdraw",
                 "transaction_amount" : -1,
-                "transaction_date" : "2024-01-27 11:11:56.756537",
                 "balance_after_operation" : 100
                 }, 
                 ValueError),
@@ -172,7 +169,6 @@ class TestTrancationClass:
                 "name" : "John Doe",
                 "transaction_type" : "incorrect_transaction_type",
                 "transaction_amount" : 1,
-                "transaction_date" : "2024-01-27 11:11:56.756537",
                 "balance_after_operation" : 100
                 }, 
                 ValueError)
@@ -181,26 +177,24 @@ class TestTrancationClass:
     def test_transaction_instance_initialization_withdraw(self, client_data, expected_exception):
         if expected_exception:
             with pytest.raises(expected_exception) as excinfo:
-                    new_transaction = transaction.Transaction(client_data["name"], client_data["transaction_type"], client_data["transaction_amount"], client_data["transaction_date"], client_data["balance_after_operation"])
+                    new_transaction = transaction.Transaction(client_data["name"], client_data["transaction_type"], client_data["transaction_amount"], client_data["balance_after_operation"])
             if client_data["transaction_amount"] < 0:
                 assert str(excinfo.value) == "Transaction amount can't be a negative number."
             else: 
                 assert str(excinfo.value) == "Invalid transaction type"
         else: 
-            new_transaction = transaction.Transaction(client_data["name"], client_data["transaction_type"], client_data["transaction_amount"], client_data["transaction_date"], client_data["balance_after_operation"])
+            new_transaction = transaction.Transaction(client_data["name"], client_data["transaction_type"], client_data["transaction_amount"], client_data["balance_after_operation"])
             assert new_transaction.client_name == client_data["name"]
             assert new_transaction.transaction_type == client_data["transaction_type"].lower()
             assert new_transaction.transaction_amount == -client_data["transaction_amount"]
             assert new_transaction.id != ""
-            assert new_transaction.transaction_date == client_data["transaction_date"]
             assert new_transaction.balance_after_operation == client_data["balance_after_operation"]
 
     def test_dunder_method_str_transaction_class(self):
         client_name = "John Doe"
         transaction_type = "WiTHdrAw"
         transaction_amount = 16
-        transaction_date = datetime.now()
         balance_after_operation = 32
-        new_transaction = transaction.Transaction(client_name, transaction_type, transaction_amount, transaction_date, balance_after_operation)
+        new_transaction = transaction.Transaction(client_name, transaction_type, transaction_amount, balance_after_operation)
         
-        assert str(new_transaction) == f"Client: {client_name} \tTransaction type: {transaction_type.lower()} \tTransaction ID: {new_transaction.id} \tTransaction amount: {-transaction_amount} \tTransaction date: {transaction_date} \tBalance after operation: {balance_after_operation}"
+        assert str(new_transaction) == f"Client: {client_name} \tTransaction type: {transaction_type.lower()} \tTransaction ID: {new_transaction.id} \tTransaction amount: {-transaction_amount} \tTransaction date: {new_transaction.transaction_date} \tBalance after operation: {balance_after_operation}"

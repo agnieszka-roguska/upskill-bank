@@ -1,5 +1,6 @@
 from uuid import uuid4
 from enum import Enum
+from datetime import datetime
 
 class TransactionType(Enum):
     WITHDRAW = "withdraw" # -1
@@ -7,7 +8,7 @@ class TransactionType(Enum):
 
 
 class Transaction:
-    def __init__(self, client_name: str, transaction_type: str, transaction_amount: float, transaction_date, balance_after_operation: float) -> None:
+    def __init__(self, client_name: str, transaction_type: str, transaction_amount: float, balance_after_operation: float) -> None:
         if transaction_type.lower() not in [item.value for item in TransactionType]:
             raise ValueError("Invalid transaction type")
         elif transaction_amount < 0:
@@ -21,7 +22,7 @@ class Transaction:
         self.__id = uuid4().hex
         self.client_name = client_name
         self.transaction_type = transaction_type.lower()
-        self.transaction_date = transaction_date
+        self.transaction_date = datetime.now()
         self.balance_after_operation = balance_after_operation
 
     @property

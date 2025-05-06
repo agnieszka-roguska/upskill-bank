@@ -3,11 +3,11 @@ from datetime import datetime
 import upskill_python.transaction as transaction
 
 class Client:
-    def __init__(self, name: str, balance: int | float):
+    def __init__(self, name: str, balance: int | float) -> None:
         self.__id = uuid4().hex
         self.name = name
         self.__balance = balance
-        self.transaction_list: list[transaction.Transaction] = []
+        self.transaction_list = []
 
     def __str__(self) -> None:
         message = f"Name: {self.name}\t Client ID: {self.id} Balance: {self.balance}"
@@ -37,20 +37,18 @@ class Client:
             self.balance = self.balance + amount
         else:
             raise ValueError("The amount can't be negative")
-        new_transaction = transaction.Transaction(self.name, transaction_name, amount, datetime.now(), self.balance)
+        new_transaction = transaction.Transaction(self.name, transaction_name, amount, self.balance)
         self.transaction_list.append(new_transaction)
 
     def withdraw(self, amount: int | float) -> None:
         transaction_name = transaction.TransactionType.WITHDRAW.value #"withdraw"
         if (self.balance >= amount) & (amount >= 0):
             self.balance = self.balance - amount
-            new_transaction = transaction.Transaction(self.name, transaction_name, amount, datetime.now(), self.balance)
+            new_transaction = transaction.Transaction(self.name, transaction_name, amount, self.balance)
             self.transaction_list.append(new_transaction)
         elif amount < 0:
-            #return {"status": "ERROR", "content": "The amount can't be negative"}
             raise ValueError("The amount can't be negative")
         else:
-            #return {"status": "ERROR", "content": f"Transaction declined due to insufficient funds. Your account balance is {self.balance}. Failed transation info: {transaction_name}, {amount}"}
             raise ValueError(f"Transaction declined due to insufficient funds. Your account balance is {self.balance}. Failed transation info: {transaction_name}, {amount}")
     
     def get_transaction_history(self) -> str:
