@@ -3,7 +3,7 @@ import upskill_python.client as client
 
 class Bank:
     def __init__(self):
-        self.client_list : list[client.Client] = []
+        self.client_list: list[client.Client] = []
 
     def add_client(self, new_client_name: str, initial_balance: int | float) -> None:
         """Create new client instance and add it to the client_list."""
@@ -18,13 +18,15 @@ class Bank:
                 if some_client.name == name_client_to_remove:
                     self.client_list.pop(index)
 
-    def get_client(self, client_name: str) -> client.Client:  # takes client_name as an argument and returns client instance
+    def get_client(
+        self, client_name: str
+    ) -> client.Client:  # takes client_name as an argument and returns client instance
         for some_client in self.client_list:
             if some_client.name == client_name:
                 return some_client
         raise ValueError(f"There is no client called {client_name} in the database.")
 
-    def get_all_client_balances(self) -> str:  
+    def get_all_client_balances(self) -> str:
         """return str containing info about all clients and their balances"""
         message = ""
         for some_client in self.client_list:
