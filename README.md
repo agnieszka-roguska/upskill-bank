@@ -19,7 +19,7 @@ The project consists of a few parts:
 ### Installation: 
 To install the project, clone the repository and install the dependencies:
 1. clone the repository and navigate to the project directory
-    `git clone https://github.com/yourusername/upskill-python.git`
+    `git clone https://github.com/agnieszka-roguska/upskill-bank.git`
     `cd upskill-python`
 2. install uv and the dependencies
     `pip install uv`

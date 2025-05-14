@@ -6,7 +6,6 @@ class Bank:
         self.client_list: list[client.Client] = []
 
     def add_client(self, new_client_name: str, initial_balance: int | float) -> None:
-        """Create new client instance and add it to the client_list."""
         new_client = client.Client(new_client_name, initial_balance)
         self.client_list.append(new_client)
 
