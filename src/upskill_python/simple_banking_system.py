@@ -54,10 +54,18 @@ def existing_client_window():
             messagebox.showinfo(title = "Error", message = f"{e}", parent = new_client_window)
 
     def get_transaction_history():
+        def destroy():
+            pop_up_info_window.destroy()
+
         client_name = entry_client.get()
         try:
             client = bank_instance.get_client(client_name)
-            messagebox.showinfo(message = str(client) + "\n" + client.get_transaction_history(), parent = new_client_window)
+            message = str(client) + "\n" + client.get_transaction_history()
+            pop_up_info_window = tk.Toplevel(new_client_window)
+            pop_up_info_window.title("Transaction history")
+            pop_up_info_window['background'] = "#9DC183"
+            tk.Label(pop_up_info_window, text = message, fg = "black", bg = "#9DC183").pack()
+            tk.Button(pop_up_info_window, text="OK", command = destroy).pack(side = tk.BOTTOM)
         except ValueError as e:
             messagebox.showinfo(title = "Error", message = f"{e}", parent = new_client_window)
 
@@ -87,12 +95,15 @@ def show_all_clients():
 
 def add_client_window():
     def add_client():
-        client_name = entry_client_name.get()
-        initial_balance = float(entry_amount.get())
-        bank_instance.add_client(client_name, initial_balance)
-        messagebox.showinfo("Add client", f"{client_name} was added successfully!", parent = new_window)
-        label.config(text = "Number of clients in the bank: " + str(len(bank_instance.client_list)))
-        new_window.destroy()
+        try:
+            client_name = entry_client_name.get()
+            initial_balance = float(entry_amount.get())
+            bank_instance.add_client(client_name, initial_balance)
+            messagebox.showinfo("Add client", f"{client_name} was added successfully!", parent = new_window)
+            label.config(text = "Number of clients in the bank: " + str(len(bank_instance.client_list)))
+            new_window.destroy()
+        except ValueError as e:
+            messagebox.showinfo(title = "Error", message = f"{e} - Incorrect value entered. Try again.", parent = new_window)
 
     new_window = tk.Toplevel(root)
     new_window.title("Add new client")
